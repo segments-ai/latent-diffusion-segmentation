@@ -1,0 +1,15 @@
+# default yaml
+#
+
+setup: simple_diffusion
+run_idx: -1
+debug: False
+defaults:
+    - _self_
+    - base: base
+    - datasets: coco
+    - env: root_paths
+    - distributed: local
+
+hydra:  
+  output_subdir: null

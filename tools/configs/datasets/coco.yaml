@@ -1,0 +1,9 @@
+# Dataset
+train_db_name: coco
+val_db_name: coco
+split: 'train'
+num_classes: 128
+has_bg: False
+ignore_label: 0
+fill_value: 0.5
+inpainting_strength: 0.0

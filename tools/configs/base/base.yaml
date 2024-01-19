@@ -1,0 +1,181 @@
+# pretrained path
+pretrained_model_path: "CompVis/stable-diffusion-v1-4"
+
+# Logging
+wandb: False
+
+# Evaluate only
+eval_only: False
+load_path:
+
+# vae model path and kwargs
+image_scaling_factor: 0.18215  # standard SD scaling factor
+shared_vae_encoder: False
+vae_model_kwargs:
+   in_channels: 7  # consider bit encoding
+   int_channels: 256
+   out_channels: 128
+   block_out_channels: [32, 64, 128, 256]
+   latent_channels: 4
+   num_latents: 2
+   num_upscalers: 2
+   upscale_channels: 256
+   norm_num_groups: 32
+   scaling_factor: 0.2
+   parametrization: 'gaussian'
+   act_fn: 'none'
+   clamp_output: False
+   freeze_codebook: False
+   num_mid_blocks: 0
+   fuse_rgb: False
+   resize_input: False
+   skip_encoder: False
+   pretrained_path:
+
+# Model
+backbone: unet
+model_kwargs:
+   in_channels: 8
+   init_mode_seg: copy
+   init_mode_image: zero
+   cond_channels: 0
+   separate_conv: False
+   separate_encoder: False
+   add_adaptor: False
+   init_mode_adaptor: random
+
+# Noise scheduler
+noise_scheduler_kwargs:
+   prediction_type: epsilon
+   beta_schedule: scaled_linear
+   num_train_timesteps: 1000
+   beta_start: 0.00085
+   beta_end: 0.012
+   steps_offset: 1
+   clip_sample: False
+   set_alpha_to_one: False
+   thresholding: False
+   dynamic_thresholding_ratio: 0.995
+   clip_sample_range: 1.0
+   sample_max_value: 1.0
+   weight: none
+   max_snr: 5.0
+
+# Training parameters
+train_kwargs:
+   dropout: 0.0
+   inpaint_mask_size: [64, 64]
+   type_mask: ignore
+   latent_mask: False
+   encoding_mode: bits
+   image_descriptors: remove
+   caption_type: none
+   caption_dropout: 1.0  # always drop captions by default
+   prob_train_on_pred: 0.0
+   prob_inpainting: 0.0
+   min_noise_level: 0
+   rgb_noise_level: 0
+   cond_noise_level: 0
+   self_condition: False
+   sample_posterior: False
+   sample_posterior_rgb: False
+   remap_seg: True
+   train_num_steps: 35000
+   batch_size: 8
+   accumulate: 1
+   num_workers: 2
+   loss: l2
+   ohem_ratio: 1.
+   cudnn: False
+   fp16: False
+   weight_dtype: float32
+   use_xformers: False
+   gradient_as_bucket_view: False
+   clip_grad: 3.0
+   allow_tf32: False
+   freeze_layers: ['time_embedding']
+   find_unused_parameters: False
+   gradient_checkpointing: False
+
+# Loss weights
+loss_weights:
+   mask: 1.0
+   ce: 1.0
+   kl: 0.0
+
+# Loss kwargs
+loss_kwargs:
+   num_points: 12544
+   oversample_ratio: 3
+   importance_sample_ratio: 0.75
+   cost_mask: 1.0
+   cost_class: 1.0
+   temperature: 1.0
+
+# Sampling parameters
+sampling_kwargs:
+   num_inference_steps: 50
+   guidance_scale: 7.5  # only applicable when using guidance with image descriptors
+   seed: 0
+   block_size: 2
+   prob_mask: 0.5
+
+# Evaluation parameters / Visualization
+eval_kwargs:
+   mask_th: 0.5
+   count_th: 512
+   overlap_th: 0.5
+   batch_size: 16
+   num_workers: 2
+   vis_every: 5000
+   print_freq: 100
+
+# Optimizer
+optimizer_name: adamw
+optimizer_kwargs:
+   lr: 1.0e-4
+   betas: [0.9, 0.999]
+   weight_decay: 0.0
+   weight_decay_norm: 0.0
+optimizer_zero_redundancy: False
+optimizer_backbone_multiplier: 1.0
+optimizer_save_optim: False
+
+# EMA (not used)
+ema_on: False
+ema_kwargs:
+   decay: 0.9999
+   device: cuda
+
+# LR scheduler
+lr_scheduler_name: warmup
+lr_scheduler_kwargs:
+   final_lr: 0.000001  # N/A if scheduler_type is not cosine
+   warmup_iters: 200
+
+# Transformations
+transformation_kwargs:
+   type: crop_resize_pil
+   size: 512      # size of the image during training
+   size_rgb: 512  # resize rgb to this size
+   max_size: 512  # max size of the image during eval
+   scales: [352, 384, 416, 448, 480, 512, 544, 576, 608, 640]
+   min_scale: 0.5
+   max_scale: 1.5
+   pad_value: 0
+   flip: True
+   normalize: False
+   normalize_params:
+      mean: [0.485, 0.456, 0.406]
+      std: [0.229, 0.224, 0.225]
+
+# dataset information: will be overwritten by the dataset config
+train_db_name:
+val_db_name:
+split: 'val'
+num_classes: 128   # max number of instances we can detect
+num_bits: 7        # if we want to detect 128 instances, we need 7 bits
+has_bg: False
+ignore_label: 0
+fill_value: 0.5
+inpainting_strength: 0.0

@@ -1,0 +1,41 @@
+#!/bin/bash
+BS=${1-32}
+ITERS=${2-90000}
+
+export OMP_NUM_THREADS=1
+python -W ignore tools/main_ldm.py \
+    datasets=coco \
+    debug=False \
+    base.wandb=False \
+    base.train_kwargs.train_num_steps=$ITERS \
+    base.train_kwargs.batch_size=$BS \
+    base.train_kwargs.accumulate=1 \
+    base.eval_kwargs.vis_every=500 \
+    base.train_kwargs.gradient_checkpointing=True \
+    base.train_kwargs.weight_dtype=float16 \
+    base.train_kwargs.fp16=True \
+    base.vae_model_kwargs.pretrained_path='pretrained/ae.pt' \
+    base.vae_model_kwargs.parametrization=gaussian \
+    base.vae_model_kwargs.num_upscalers=2 \
+    base.vae_model_kwargs.num_mid_blocks=0 \
+    base.noise_scheduler_kwargs.prediction_type='epsilon' \
+    base.noise_scheduler_kwargs.weight='max_clamp_snr' \
+    base.noise_scheduler_kwargs.max_snr=2.0 \
+    base.vae_model_kwargs.scaling_factor=0.18215 \
+    base.train_kwargs.ohem_ratio=1.0 \
+    base.optimizer_name='adamw' \
+    base.optimizer_zero_redundancy=True \
+    base.optimizer_kwargs.lr=1.0e-4 \
+    base.optimizer_kwargs.weight_decay=0.05 \
+    base.train_kwargs.clip_grad=1.0 \
+    base.transformation_kwargs.type=crop_resize_pil \
+    base.transformation_kwargs.size=512 \
+    base.transformation_kwargs.max_size=512 \
+    "base.train_kwargs.freeze_layers=['time_embedding']" \
+    base.eval_kwargs.mask_th=0.9 \
+    base.eval_kwargs.overlap_th=0.9 \
+    base.eval_kwargs.count_th=512 \
+    base.sampling_kwargs.num_inference_steps=50 \
+    base.train_kwargs.self_condition=True \
+    base.model_kwargs.cond_channels=4 \
+    base.lr_scheduler_name=cosine \

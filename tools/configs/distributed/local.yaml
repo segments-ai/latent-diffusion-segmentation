@@ -1,0 +1,7 @@
+# distributed settting
+
+world_size: 1
+rank: 0
+dist_url: tcp://127.0.0.1:54286
+dist_backend: nccl
+multiprocessing_distributed: True

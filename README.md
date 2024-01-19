@@ -111,7 +111,7 @@ More details on passing arguments can be found in `tools/scripts/train_ae.sh`. F
 
 ### Step 2: Train an LDM for Panoptic Segmentation Conditioned on RGB Images
 ```python
-python -W ignore tools/main_sd.py \
+python -W ignore tools/main_ldm.py \
     datasets=coco \
     base.train_kwargs.gradient_checkpointing=True \
     base.train_kwargs.fp16=True \

@@ -160,13 +160,13 @@ class UNet(UNet2DConditionModel):
                 raise NotImplementedError(f"init_mode seg {init_mode_seg} not implemented")
 
             # handle image part
-            if init_mode_seg == "zero":
+            if init_mode_image == "zero":
                 self.conv_in.weight.data.zero_()
                 self.conv_in.bias.data.zero_()
-            elif init_mode_seg == "copy":
+            elif init_mode_image == "copy":
                 self.conv_in.weight.data.copy_(self.conv_in.weight.data)
                 self.conv_in.bias.data.copy_(self.conv_in.bias.data)
-            elif init_mode_seg == "div":
+            elif init_mode_image == "div":
                 self.conv_in.weight.data.copy_(self.conv_in.weight.data) / 2.
                 self.conv_in.bias.data.copy_(self.conv_in.bias.data)
             else:
